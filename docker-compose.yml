@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   bankdb:
     image: mysql:8
@@ -12,19 +13,19 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      healthcheck:
-        test: ["CMD","mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
-        interval: 20s
-        timeout: 5s
-        retries: 5
-        start_period: 30s
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   kk-04-rest:
     build: .
     container_name: kk-04-rest
     depends_on:
-      - bankdb
-          condition: service_healthy
+      bankdb:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
